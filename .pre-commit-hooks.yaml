@@ -1,0 +1,8 @@
+- id: validate-i18n
+  name: Validate i18next translations
+  description: Check for empty translations and plural suffixes in values
+  entry: validate-i18n
+  language: python
+  types: [json]
+  pass_filenames: true
+
