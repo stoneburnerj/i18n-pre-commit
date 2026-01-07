@@ -45,11 +45,12 @@ Add this to your `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
-  - repo: https://github.com/YOUR-USERNAME/i18n-pre-commit
+  - repo: https://github.com/stoneburnerj/i18n-pre-commit
     rev: v0.1.0  # Use the latest release version
     hooks:
       - id: validate-i18n
-        args: [--translation-dirs, locales/]
+        types: [json]
+        args: [--translation-dir, locales/]
 ```
 
 Then install the pre-commit hooks:
@@ -60,20 +61,14 @@ pre-commit install
 
 ## Configuration
 
-### Specifying Translation Directories
+### Specifying Translation Directory
 
-Use the `--translation-dirs` argument to specify one or more directories containing your translation files. This ensures the hook only runs on relevant JSON files.
+Use the `--translation-dir` argument to specify a directory containing your translation files. This ensures the hook only runs on relevant JSON files.
 
-**Single directory:**
 ```yaml
 - id: validate-i18n
-  args: [--translation-dirs, locales/]
-```
-
-**Multiple directories:**
-```yaml
-- id: validate-i18n
-  args: [--translation-dirs, locales/, public/i18n/, src/translations/]
+  types: [json]
+  args: [--translation-dir, locales/]
 ```
 
 **All JSON files (not recommended):**
@@ -82,34 +77,6 @@ Use the `--translation-dirs` argument to specify one or more directories contain
   # No args - will check all JSON files
 ```
 
-## Usage
-
-Once installed, the hook will automatically run when you commit changes to JSON files in your specified translation directories.
-
-### Example Output
-
-When validation issues are found:
-
-```
-Validate i18next translations...................................Failed
-- hook id: validate-i18n
-- exit code: 1
-
-locales/en/common.json:
-  - Empty translation: "welcome" - translation value is an empty string
-  - Empty translation: "cancel" - translation value is an empty string
-  - Plural suffix in value: "{{count}} notifications_one" - contains "_one" (should be in key, not value)
-
-locales/fr/errors.json:
-  - Empty translation: "merci" - translation value is an empty string
-  - Plural suffix in value: "{{count}} résultats_other" - contains "_other" (should be in key, not value)
-```
-
-When all translations are valid:
-
-```
-Validate i18next translations...................................Passed
-```
 
 ### Manual Execution
 
@@ -125,35 +92,6 @@ Run on specific files:
 pre-commit run validate-i18n --files locales/en/common.json
 ```
 
-## Development
-
-### Local Testing
-
-To test the hook locally before publishing:
-
-1. Clone this repository
-2. Create sample translation files with intentional errors
-3. Use `pre-commit try-repo`:
-
-```bash
-pre-commit try-repo /path/to/i18n-pre-commit validate-i18n --files test.json --verbose
-```
-
-### Running Tests
-
-```bash
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Run tests (if available)
-pytest
-```
-
-## Requirements
-
-- Python >= 3.8
-- No external dependencies (uses Python standard library only)
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -161,11 +99,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 MIT License - see LICENSE file for details.
-
-## Author
-
-Created to help maintain i18next translation quality in development workflows.
-
-## Acknowledgments
-
-This hook was built following the [pre-commit hook creation guide](https://pre-commit.com/#creating-new-hooks) and inspired by best practices from the pre-commit community.
