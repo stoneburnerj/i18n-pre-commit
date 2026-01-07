@@ -135,21 +135,18 @@ def should_process_file(filepath: Path, translation_dirs: List[str]) -> bool:
         # If no directories specified, process all JSON files
         return True
 
-    # Convert filepath to Path object for better comparison
-    file_path_obj = Path(filepath).resolve()
+    # Normalize the filepath (works with both absolute and relative paths)
+    filepath_str = str(filepath).replace('\\', '/')
 
     for trans_dir in translation_dirs:
-        # Convert translation dir to Path and resolve it
-        trans_dir_path = Path(trans_dir).resolve()
+        # Normalize the translation directory
+        trans_dir_normalized = trans_dir.rstrip('/').rstrip('\\').replace('\\', '/')
 
-        # Check if file is in this directory or its subdirectories
-        try:
-            # This will raise ValueError if file_path is not relative to trans_dir_path
-            file_path_obj.relative_to(trans_dir_path)
+        # Check if the translation directory appears in the file path
+        # This handles both relative and absolute paths
+        if f'/{trans_dir_normalized}/' in f'/{filepath_str}/' or \
+           filepath_str.startswith(f'{trans_dir_normalized}/'):
             return True
-        except ValueError:
-            # Not in this directory, continue to next
-            continue
 
     return False
 
@@ -174,13 +171,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         help='Filenames to process (provided by pre-commit).',
     )
     parser.add_argument(
-        '--translation-dirs',
-        nargs='+',
-        default=[],
-        help='One or more directory paths containing translation files.',
+        '--translation-dir',
+        type=str,
+        default='',
+        help='Directory path containing translation files (checks if this path appears in the file path).',
     )
 
     args = parser.parse_args(argv)
+
+    # Convert single dir to list for compatibility with should_process_file
+    translation_dirs = [args.translation_dir] if args.translation_dir else []
 
     if not args.filenames:
         # No files to check
@@ -197,7 +197,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             continue
 
         # Check if file is in translation directories
-        if not should_process_file(filepath, args.translation_dirs):
+        if not should_process_file(filepath, translation_dirs):
             continue
 
         # Validate the file
