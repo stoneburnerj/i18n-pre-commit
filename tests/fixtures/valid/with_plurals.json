@@ -1,0 +1,9 @@
+{
+  "{{count}} items_one": "{{count}} item",
+  "{{count}} items_other": "{{count}} items",
+  "{{count}} users_one": "1 user",
+  "{{count}} users_other": "{{count}} users",
+  "{{count}} files uploaded_one": "{{count}} file uploaded",
+  "{{count}} files uploaded_other": "{{count}} files uploaded"
+}
+

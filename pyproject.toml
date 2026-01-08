@@ -23,7 +23,7 @@ requires-python = ">=3.8"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pre-commit", "pytest"]
+dev = ["pre-commit", "pytest>=7.0", "pytest-cov>=4.0"]
 
 [project.scripts]
 validate-i18n = "i18n_validator.cli:main"
@@ -36,4 +36,20 @@ Issues = "https://github.com/stoneburnerj/i18n-pre-commit/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = [
+    "--cov=src/i18n_validator",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    "-v"
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests"
+]
 

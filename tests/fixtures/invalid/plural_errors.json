@@ -1,0 +1,7 @@
+{
+  "count": "{{count}} items_one",
+  "total": "{{total}} results_other",
+  "members": "{{count}} members selected_one",
+  "valid_key": "This is a valid translation"
+}
+
