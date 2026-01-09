@@ -94,7 +94,7 @@ pre-commit run validate-i18n --files locales/en/common.json
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request (ensure all tests pass before submitting).
 
 ## License
 
